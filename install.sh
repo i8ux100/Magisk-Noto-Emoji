@@ -123,7 +123,7 @@ REPLACE="
 
 print_modname() {
   ui_print "*******************************"
-  ui_print "        iOS Emoji 14.6         "
+  ui_print "      NotoColorEmoji 14.0      "
   ui_print "*******************************"
 }
 

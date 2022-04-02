@@ -1,6 +1,6 @@
-id=iOS_Emoji
-name=iOS 14.6 iOS Emoji font
-version=v14.6
+id=NotoColorEmoji_Emoji
+name=NotoColorEmoji 14.0 Emoji font
+version=v14.0
 versionCode=1
-author=Keinta15
-description=Systemlessly replaces emoji font with iOS 14.6 Emoji 
+author=2tefan
+description=Systemlessly replaces emoji font with NotoColorEmoji 14.0 Emoji 

@@ -1,10 +1,13 @@
-# Magisk-iOS-Emoji
-Systemlessly replaces emoji font with iOS Emoji 
+# Magisk-NotoColorEmoji-Emoji
+Systemlessly replaces emoji font with NotoColorEmoji Emoji
 
-## Samsung devices
-Samsung devices have a separate module on [Release](https://github.com/Keinta15/Magisk-iOS-Emoji/releases)
+Based on (Keinta15/Magisk-iOS-Emoji)[https://github.com/Keinta15/Magisk-iOS-Emoji]
+
+## Releases
+Here the newest version can be found: [Releases](https://github.com/2tefan/Magisk-Noto-Emoji-14/releases)
 
 ## Changelog
-[14.6 new emojis](https://blog.emojipedia.org/ios-14-6-emoji-changelog/)
+[Unicode 14.0](https://emojipedia.org/emoji-14.0/)
 
-[14.2 new emojis](https://blog.emojipedia.org/ios-14-2-emoji-changelog/)
+## Sources
+[Emoji Source - 14.0](https://github.com/googlefonts/noto-emoji/releases/tag/v2.034)
