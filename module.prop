@@ -4,4 +4,4 @@ version=v14.0
 versionCode=1
 author=2tefan
 description=Systemlessly replaces emoji font with NotoColorEmoji 14.0 Emoji 
-updateJson=https://raw.githubusercontent.com/lumi200/Magisk-Noto-Emoji-14/main/update.json
+updateJson=https://raw.githubusercontent.com/lumi200/Magisk-Noto-Emoji-14/main/.magisk/update.json
