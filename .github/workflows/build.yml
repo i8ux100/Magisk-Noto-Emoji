@@ -33,8 +33,9 @@ jobs:
       # Runs a set of commands using the runners shell
       - name: Download Latest Font
         id: download_font
-        run:
-          wget https://raw.githubusercontent.com/googlefonts/noto-emoji/main/fonts/NotoColorEmoji.ttf > system/fonts/NotoColorEmoji.ttf
+        run: |
+          rm system/fonts/NotoColorEmoji.ttf
+          wget -P system/fonts https://raw.githubusercontent.com/googlefonts/noto-emoji/main/fonts/NotoColorEmoji.ttf
 
       - name: Update Module Version
         id: update_version
