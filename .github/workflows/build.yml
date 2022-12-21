@@ -48,6 +48,8 @@ jobs:
           zip -r -u Magisk-Noto-Emoji.zip META-INF system install.sh module.prop
           
       - uses: stefanzweifel/git-auto-commit-action@v4
+        with:
+          tagging_message: ${{steps.create_tag.outputs.tag}}
           
   release:
     needs: [build]
@@ -56,6 +58,7 @@ jobs:
       - uses: actions/checkout@v3
     
       - uses: softprops/action-gh-release@v1
+        if: startsWith(github.ref, 'refs/tags/')
         with:
           name: ${{needs.build.outputs.tag}}
           files: Magisk-Noto-Emoji.zip
