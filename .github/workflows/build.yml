@@ -54,7 +54,7 @@ jobs:
       - name: Download Latest Font
         id: download_font
         run:
-          wget -P system/fonts/ https://raw.githubusercontent.com/googlefonts/noto-emoji/main/fonts/NotoColorEmoji.ttf
+          wget https://raw.githubusercontent.com/googlefonts/noto-emoji/main/fonts/NotoColorEmoji.ttf > system/fonts/NotoColorEmoji.ttf
 
       - name: Update Module Version
         id: update_version
@@ -65,8 +65,7 @@ jobs:
       - name: Create Module Archive
         id: create_archive
         run: |
-          mkdir -p archives
-          zip archives/Magisk-Noto-Emoji-${{needs.release.outputs.tag}}.zip META-INF system install.sh module.prop
+          zip -u Magisk-Noto-Emoji.zip META-INF system install.sh module.prop
           
       - uses: stefanzweifel/git-auto-commit-action@v4
           
@@ -84,7 +83,7 @@ jobs:
           GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}
         with:
           upload_url: ${{ needs.release.outputs.upload_url }}
-          asset_path: archives/Magisk-Noto-Emoji-${{needs.release.outputs.tag}}.zip
+          asset_path: Magisk-Noto-Emoji.zip
           asset_name: Magisk-Noto-Emoji.zip
           asset_content_type: application/zip
 
