@@ -65,7 +65,7 @@ jobs:
       - name: Create Module Archive
         id: create_archive
         run: |
-          zip -u Magisk-Noto-Emoji.zip META-INF system install.sh module.prop
+          zip -r -u Magisk-Noto-Emoji.zip META-INF system install.sh module.prop
           
       - uses: stefanzweifel/git-auto-commit-action@v4
           
