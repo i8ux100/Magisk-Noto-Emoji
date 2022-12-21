@@ -31,7 +31,7 @@ jobs:
           echo "::set-output name=tag::$tag"
       - name: Create Release
         id: create_release
-        uses: actions/create-release@v1
+        uses: softprops/action-gh-release@v1
         env:
           GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}
         with:
@@ -67,15 +67,15 @@ jobs:
         run: |
           mkdir -p archives
           zip archives/Magisk-Noto-Emoji-${{needs.release.outputs.tag}}.zip META-INF system install.sh module.prop
-      
-      - name: Update Repo
-        id: update_repo
-        uses: stefanzweifel/git-auto-commit-action@v4
+          
+      - uses: stefanzweifel/git-auto-commit-action@v4
           
   publish:
     needs: [release, build]
     runs-on: ubuntu-latest
     steps:
+    
+      - uses: actions/checkout@v3
 
       - name: Upload Assets
         id: upload_assets
