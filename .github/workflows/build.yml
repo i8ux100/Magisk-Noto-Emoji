@@ -13,42 +13,22 @@ on:
 
 # A workflow run is made up of one or more jobs that can run sequentially or in parallel
 jobs:
-  release:
-    runs-on: ubuntu-latest
-    outputs:
-      release_id: ${{ steps.create_release.outputs.id }}
-      upload_url: ${{ steps.create_release.outputs.upload_url }}
-      tag: ${{ steps.create_tag.outputs.tag }}
-    steps:
-      - uses: actions/checkout@v2
-        with:
-          fetch-depth: 0
-        if: github.event_name == 'schedule'
-      - name: Create Tag
-        id: create_tag
-        run: |
-          echo "tag=$(date +%Y%m%d%H%M%S)" >> $GITHUB_OUTPUT
-          echo "::set-output name=tag::$tag"
-      - name: Create Release
-        id: create_release
-        uses: softprops/action-gh-release@v1
-        env:
-          GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}
-        with:
-          tag_name: ${{ steps.create_tag.outputs.tag }}
-          release_name: ${{ steps.create_tag.outputs.tag }}
-          draft: true
-          prerelease: false
-
   # This workflow contains a single job called "build"
   build:
-    needs: [release]
     # The type of runner that the job will run on
     runs-on: ubuntu-latest
+    
+    outputs:
+      tag: ${{steps.create_tag.outputs.tag}}
     # Steps represent a sequence of tasks that will be executed as part of the job
     steps:
       # Checks-out your repository under $GITHUB_WORKSPACE, so your job can access it
       - uses: actions/checkout@v3
+      
+      - name: Create Tag
+        id: create_tag
+        run:
+          echo "tag=$(date +%Y%m%d%H%M%S)" >> $GITHUB_OUTPUT
 
       # Runs a set of commands using the runners shell
       - name: Download Latest Font
@@ -59,8 +39,8 @@ jobs:
       - name: Update Module Version
         id: update_version
         run: |
-          sed -ri "s/[0-9]{4}[01][0-9][0-3][0-9][0-2][0-9][0-5][0-9][0-5][0-9]/${{needs.release.outputs.tag}}/g" module.prop
-          sed -ri "s/[0-9]{4}[01][0-9][0-3][0-9][0-2][0-9][0-5][0-9][0-5][0-9]/${{needs.release.outputs.tag}}/g" .magisk/update.json
+          sed -ri "s/[0-9]{4}[01][0-9][0-3][0-9][0-2][0-9][0-5][0-9][0-5][0-9]/${{steps.create_tag.outputs.tag}}/g" module.prop
+          sed -ri "s/[0-9]{4}[01][0-9][0-3][0-9][0-2][0-9][0-5][0-9][0-5][0-9]/${{steps.create_tag.outputs.tag}}/g" .magisk/update.json
           
       - name: Create Module Archive
         id: create_archive
@@ -69,29 +49,13 @@ jobs:
           
       - uses: stefanzweifel/git-auto-commit-action@v4
           
-  publish:
-    needs: [release, build]
+  release:
+    needs: [build]
     runs-on: ubuntu-latest
     steps:
-    
       - uses: actions/checkout@v3
-
-      - name: Upload Assets
-        id: upload_assets
-        uses: actions/upload-release-asset@v1
-        env:
-          GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}
+    
+      - uses: softprops/action-gh-release@v1
         with:
-          upload_url: ${{ needs.release.outputs.upload_url }}
-          asset_path: Magisk-Noto-Emoji.zip
-          asset_name: Magisk-Noto-Emoji.zip
-          asset_content_type: application/zip
-
-      - name: Publish Release
-        id: publish_release
-        uses: eregon/publish-release@v1
-        env:
-          GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}
-        with:
-          release_id: ${{ needs.release.outputs.release_id }}
-            
+          name: ${{needs.build.outputs.tag}}
+          files: Magisk-Noto-Emoji.zip
