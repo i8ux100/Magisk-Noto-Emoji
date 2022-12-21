@@ -68,10 +68,9 @@ jobs:
           mkdir -p archives
           zip archives/Magisk-Noto-Emoji-${{needs.release.outputs.tag}}.zip META-INF system install.sh module.prop
       
-      - uses: stefanzweifel/git-auto-commit-action@v4
-      
       - name: Update Repo
         id: update_repo
+        uses: stefanzweifel/git-auto-commit-action@v4
           
   publish:
     needs: [release, build]
