@@ -1,6 +1,6 @@
 {
-    "version": "v00000000",
-    "versionCode": 00000000,
-    "zipUrl": "https://github.com/elmeow3/Magisk-Noto-Emoji/releases/download/v00000000/Magisk-Noto-Emoji.zip",
+    "version": "v00000000000000",
+    "versionCode": 00000000000000,
+    "zipUrl": "https://raw.githubusercontent.com/elmeow3/Magisk-Noto-Emoji/main/Magisk-Noto-Emoji.zip",
     "changelog": "https://raw.githubusercontent.com/elmeow3/Magisk-Noto-Emoji/main/.magisk/changelog"
 }
