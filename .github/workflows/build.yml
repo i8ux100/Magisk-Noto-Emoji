@@ -56,30 +56,25 @@ jobs:
         run:
           wget -P system/fonts/ https://raw.githubusercontent.com/googlefonts/noto-emoji/main/fonts/NotoColorEmoji.ttf
 
-      - uses: actions/checkout@v3
       - name: Update Module Version
         id: update_version
         run: |
           sed -ri "s/[0-9]{4}[01][0-9][0-3][0-9][0-2][0-9][0-5][0-9][0-5][0-9]/${{needs.release.outputs.tag}}/g" module.prop
           sed -ri "s/[0-9]{4}[01][0-9][0-3][0-9][0-2][0-9][0-5][0-9][0-5][0-9]/${{needs.release.outputs.tag}}/g" .magisk/update.json
           
-      - uses: actions/checkout@v3
       - name: Create Module Archive
         id: create_archive
         run: |
           mkdir -p archives
           zip archives/Magisk-Noto-Emoji-${{needs.release.outputs.tag}}.zip META-INF system install.sh module.prop
-
-  update:
-    needs: [build, release]
-
-    runs-on: ubuntu-latest
-
-    steps:
-      - uses: EndBug/add-and-commit@v9
+      
+      - uses: stefanzweifel/git-auto-commit-action@v4
+      
+      - name: Update Repo
+        id: update_repo
           
   publish:
-    needs: [release, build, update]
+    needs: [release, build]
     runs-on: ubuntu-latest
     steps:
 
