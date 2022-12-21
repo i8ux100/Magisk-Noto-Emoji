@@ -14,11 +14,11 @@ on:
 # A workflow run is made up of one or more jobs that can run sequentially or in parallel
 jobs:
   release:
-    name: Create GitHub Release
     runs-on: ubuntu-latest
     outputs:
       release_id: ${{ steps.create_release.outputs.id }}
       upload_url: ${{ steps.create_release.outputs.upload_url }}
+      tag: ${{ steps.create_tag.outputs.tag }}
     steps:
       - uses: actions/checkout@v2
         with:
@@ -28,9 +28,9 @@ jobs:
         id: create_tag
         run: |
           if [[ "${{ github.event_name }}" == "schedule" ]]; then
-            tag=v$(date +%Y%m%d)
+            echo "tag=$(date +%Y%m%d%H%M%S)" >> $GITHUB_OUTPUT
           else
-            tag=$(basename "${{ github.ref }}")
+            echo 'tag=$(basename "${{ github.ref }}")' >> $GITHUB_OUTPUT
           fi
           echo "::set-output name=tag::$tag"
       - name: Create Release
@@ -50,6 +50,8 @@ jobs:
     # The type of runner that the job will run on
     runs-on: ubuntu-latest
 
+    outputs:
+      archive_name: ${{}}
     # Steps represent a sequence of tasks that will be executed as part of the job
     steps:
       # Checks-out your repository under $GITHUB_WORKSPACE, so your job can access it
@@ -65,17 +67,25 @@ jobs:
       - name: Update Module Version
         id: update_version
         run: |
-          sed -ri "s/[0-9]{4}[01][0-9][0-3][0-9]/$(date '+%Y%m%d')/g" module.prop
-          sed -ri "s/[0-9]{4}[01][0-9][0-3][0-9]/$(date '+%Y%m%d')/g" .magisk/update.json
+          sed -ri "s/[0-9]{4}[01][0-9][0-3][0-9][0-2][0-9][0-5][0-9][0-5][0-9]/${{needs.release.outputs.tag}}/g" module.prop
+          sed -ri "s/[0-9]{4}[01][0-9][0-3][0-9][0-2][0-9][0-5][0-9][0-5][0-9]/${{needs.release.outputs.tag}}/g" .magisk/update.json
           
       - uses: actions/checkout@v3
       - name: Create Module Archive
         id: create_archive
         run:
-          zip Magisk-Noto-Emoji.zip META-INF system install.sh module.prop
+          zip archives/Magisk-Noto-Emoji-${{needs.release.outputs.tag}}.zip META-INF system install.sh module.prop
+
+  update:
+    needs: [build, release]
+
+    runs-on: ubuntu-latest
+
+    steps:
+      - uses: EndBug/add-and-commit@v9
           
   publish:
-    needs: [release, build]
+    needs: [release, build, update]
     runs-on: ubuntu-latest
     steps:
 
@@ -86,7 +96,7 @@ jobs:
           GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}
         with:
           upload_url: ${{ needs.release.outputs.upload_url }}
-          asset_path: Magisk-Noto-Emoji.zip
+          asset_path: archives/Magisk-Noto-Emoji-${{needs.release.outputs.tag}}.zip
           asset_name: Magisk-Noto-Emoji.zip
           asset_content_type: application/zip
 
