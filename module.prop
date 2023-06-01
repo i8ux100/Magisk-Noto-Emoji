@@ -1,7 +1,7 @@
 id=NotoColorEmoji
 name=NotoColorEmoji Emoji font
-version=v20230501003957
-versionCode=20230501003957
+version=v20230601005336
+versionCode=20230601005336
 author=elmeow3
 description=Systemlessly replaces emoji font with NotoColorEmoji
 updateJson=https://raw.githubusercontent.com/2tefan/Magisk-Noto-Emoji/main/.magisk/update.json
